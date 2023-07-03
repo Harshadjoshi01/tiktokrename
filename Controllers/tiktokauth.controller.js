@@ -56,11 +56,8 @@ const tiktokredirect = async (req, res, next) => {
 
 
     let url_access_token = `https://open.tiktokapis.com/v2/oauth/token/`;
-    url_access_token += `?client_key=${CLIENT_KEY}`;
-    url_access_token += `&client_secret=${CLIENT_SECRET}`;
-    url_access_token += `&code=${code}`;
-    url_access_token += `&grant_type=authorization_code`;
-    url_access_token += `&redirect_uri=${SERVER_ENDPOINT_REDIRECT}`;
+
+    // send url encoded data
 
     const config = {
       headers: {
@@ -69,7 +66,13 @@ const tiktokredirect = async (req, res, next) => {
       },
     };
     // set headers content type strictly to application/x-www-form-urlencoded
-    await axios.post(url_access_token, {}, config).then((response) => {
+    await axios.post(url_access_token, {
+      client_key: CLIENT_KEY,
+      client_secret: CLIENT_SECRET,
+      code: code,
+      grant_type: "authorization_code",
+      redirect_uri: SERVER_ENDPOINT_REDIRECT,
+    }, config).then((response) => {
       // send the response in Json format
       res.json(response.data);
       console.log(response.data);
