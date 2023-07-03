@@ -62,15 +62,22 @@ const tiktokredirect = async (req, res, next) => {
     url_access_token += `&grant_type=authorization_code`;
     url_access_token += `&redirect_uri=${SERVER_ENDPOINT_REDIRECT}`;
 
-    const response = await axios.post(url_access_token, {
+    const config = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "Cache-Control": "no-cache",
       },
-    })
-    // send the response in Json format
-    res.json(response.data);
-    console.log(response.data);
+    };
+    // set headers content type strictly to application/x-www-form-urlencoded
+    await axios.post(url_access_token, {}, config).then((response) => {
+      // send the response in Json format
+      res.json(response.data);
+      console.log(response.data);
+    }). catch((error) => {
+      console.log(error);
+    });
+
+
   } catch (error) {
     console.log(error);
   }
