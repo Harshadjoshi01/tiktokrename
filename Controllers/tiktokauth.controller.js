@@ -23,8 +23,11 @@ const tiktokauth = async (req, res, next) => {
   try {
     const csrfState = Math.random().toString(36).substring(2);
     // set the csrf state cookie
-    res.cookie("csrfState", csrfState, { maxAge: 900000, httpOnly: true });
-    console.log(csrfState);
+    res.cookie("csrfState", csrfState, {
+      maxAge: 3600000,
+      httpOnly: true,
+      secure: true,
+    });
 
     let url = `https://www.tiktok.com/v2/auth/authorize/`;
 
@@ -41,16 +44,16 @@ const tiktokauth = async (req, res, next) => {
 };
 
 // /redirect
-const tiktokredirect = (req, res, next) => {
+const tiktokredirect = async (req, res, next) => {
   try {
     const { code, state } = req.query;
-    const { csrfState } = req.cookies;
-    console.log(csrfState, state);
-
-    if (state !== csrfState) {
-      res.status(422).send("Invalid state");
-      return;
+    console.log(`code: ${code} and state: ${state}`);
+    const csrfState = req.cookies.csrfState;
+    if (csrfState !== state) {
+      throw CreateError.Unauthorized("Invalid state");
     }
+
+
 
     let url_access_token = `https://open.tiktokapis.com/v2/oauth/token/`;
     url_access_token += `?client_key=${CLIENT_KEY}`;
@@ -59,17 +62,15 @@ const tiktokredirect = (req, res, next) => {
     url_access_token += `&grant_type=authorization_code`;
     url_access_token += `&redirect_uri=${SERVER_ENDPOINT_REDIRECT}`;
 
-    axios.post(url_access_token, {
+    const response = await axios.post(url_access_token, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "Cache-Control": "no-cache",
       },
-    }).then((response) => {
-      // send the response in Json format
-      console.log(response.data);
-      res.json(response.data);
-
-    });
+    })
+    // send the response in Json format
+    res.json(response.data);
+    console.log(response.data);
   } catch (error) {
     next(error);
   }
