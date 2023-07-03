@@ -72,7 +72,7 @@ const tiktokredirect = async (req, res, next) => {
     res.json(response.data);
     console.log(response.data);
   } catch (error) {
-    next(error);
+    console.log(error);
   }
 };
 
