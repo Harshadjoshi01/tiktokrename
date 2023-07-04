@@ -38,8 +38,8 @@ app.get("/redirect", tiktokredirect);
 app.get("/refresh", tiktokrefresh);
 app.get("/revoke", tiktokrevoke);
 app.get("/user", gettiktokuserinfo);
-app.post("/videos", getallvideos);
-app.post("/video", gettiktokvideobyid);
+app.get("/videos", getallvideos);
+app.get("/video", gettiktokvideobyid);
 // app.post("/upload", multer.single("video"), uploadVideoChunk);
 
 // app.get('/coins', getCoins);

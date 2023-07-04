@@ -22,12 +22,14 @@ const gettiktokuserinfo = async (req, res, next) => {
 };
 
 
-const gettiktokvideolist = async (token,cursor) => {
-        return new Promise(async (resolve, reject) => {
+const gettiktokvideolist = (token,cursor) => {
+        return new Promise((resolve, reject) => {
             try {
                 if(cursor == undefined || cursor == null || cursor == "" || cursor == "0"){
                     let url = `https://open.tiktokapis.com/v2/user/video/list/`;        
-                    const response = await axios.post(url,{
+                    axios.post(url,{
+                        max_count: 20,
+                    },{
                         headers: {
                             Authorization: `Bearer ${token}`,
                             "Content-Type": "application/json",
@@ -35,14 +37,16 @@ const gettiktokvideolist = async (token,cursor) => {
                         params: {
                             fields:`id,create_time,cover_image_url,share_url,video_description,duration,height,width,title,embed_html,embed_link,like_count,comment_count,share_count,view_count`,
                         },
-                        data: {
-                            max_count: 20,
-                        },
+                    }).then((response) => {
+                        resolve(response.data);
+                    }) .catch((error) => {
+                        reject(error);
                     });
-                    resolve(response.data);
                 } else {
                     let url = `https://open.tiktokapis.com/v2/user/video/list/`;        
-                    const response = await axios.post(url,{
+                    axios.post(url,{
+                        max_count: 20,
+                    },{
                         headers: {
                             Authorization: `Bearer ${token}`,
                             "Content-Type": "application/json",
@@ -50,12 +54,11 @@ const gettiktokvideolist = async (token,cursor) => {
                         params: {
                             fields:`id,create_time,cover_image_url,share_url,video_description,duration,height,width,title,embed_html,embed_link,like_count,comment_count,share_count,view_count`,
                         },
-                        data: {
-                            max_count: 20,
-                            cursor: cursor,
-                        },
+                    }).then((response) => {
+                        resolve(response.data);
+                    }) .catch((error) => {
+                        reject(error);
                     });
-                    resolve(response.data);
                 }
             } catch (error) {
                 reject(error);
