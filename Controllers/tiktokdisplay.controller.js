@@ -26,7 +26,7 @@ const gettiktokvideolist = (token,cursor) => {
         return new Promise((resolve, reject) => {
             try {
                 if(cursor == undefined || cursor == null || cursor == "" || cursor == "0"){
-                    let url = `https://open.tiktokapis.com/v2/user/video/list/`;        
+                    let url = `https://open.tiktokapis.com/v2/video/list/`;        
                     axios.post(url,{
                         max_count: 20,
                     },{
@@ -40,15 +40,15 @@ const gettiktokvideolist = (token,cursor) => {
                     }).then((response) => {
                         resolve(response.data);
                     }) .catch((error) => {
-                        reject(error);
+                        console.log(error);
                     });
                 } else {
-                    let url = `https://open.tiktokapis.com/v2/user/video/list/`;        
+                    let url = `https://open.tiktokapis.com/v2/video/list/`;        
                     axios.post(url,{
                         max_count: 20,
                     },{
                         headers: {
-                            Authorization: `Bearer ${token}`,
+                            "Authorization": `Bearer ${token}`,
                             "Content-Type": "application/json",
                         },
                         params: {
@@ -57,11 +57,11 @@ const gettiktokvideolist = (token,cursor) => {
                     }).then((response) => {
                         resolve(response.data);
                     }) .catch((error) => {
-                        reject(error);
+                        console.log(error);
                     });
                 }
             } catch (error) {
-                reject(error);
+                console.log(error);
             }
         });
 };
