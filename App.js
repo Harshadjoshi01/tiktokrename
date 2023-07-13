@@ -15,7 +15,7 @@ const {
   tiktokrevoke,
 } = require("./Controllers/tiktokauth.controller");
 const {gettiktokuserinfo,getallvideos,gettiktokvideobyid} = require("./Controllers/tiktokdisplay.controller");
-// const { uploadVideoChunk } = require("./Controllers/tiktokvideo.controller");
+const {PostVideoOnTiktok, GetVideoStatus} = require("./Controllers/tiktokvideo.controller");
 require("dotenv").config();
 const app = express();
 
@@ -40,7 +40,9 @@ app.get("/revoke", tiktokrevoke);
 app.get("/user", gettiktokuserinfo);
 app.get("/videos", getallvideos);
 app.get("/video", gettiktokvideobyid);
-// app.post("/upload", multer.single("video"), uploadVideoChunk);
+// app.get("/creator", Creatorquery);
+app.post("/upload", multer.single("video"), PostVideoOnTiktok);
+// app.get("/videostatus", GetVideoStatus);
 
 // app.get('/coins', getCoins);
 // app.get('/coinsinwallet', coinsinwallet);

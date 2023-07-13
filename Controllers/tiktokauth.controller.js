@@ -53,8 +53,6 @@ const tiktokredirect = async (req, res, next) => {
       throw CreateError.Unauthorized("Invalid state");
     }
 
-
-
     let url_access_token = `https://open.tiktokapis.com/v2/oauth/token/`;
 
     // send url encoded data
@@ -90,17 +88,24 @@ const tiktokrefresh = (req, res, next) => {
   try {
     const { refresh_token } = req.query;
     let url_refresh_token = `https://open.tiktokapis.com/v2/oauth/token/`;
-    url_refresh_token += `?client_key=${CLIENT_KEY}`;
-    url_refresh_token += `&client_secret=${CLIENT_SECRET}`;
-    url_refresh_token += `&refresh_token=${refresh_token}`;
-    url_refresh_token += `&grant_type=refresh_token`;
-
-    axios.post(url_refresh_token, {
+    const body = {
+      client_key: CLIENT_KEY,
+      client_secret: CLIENT_SECRET,
+      grant_type: "refresh_token",
+      refresh_token: refresh_token,
+    }
+    const configdata = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "Cache-Control": "no-cache",
       },
-    }).then((response) => {
+    };
+
+    axios.post(
+      url_refresh_token,
+      body,
+      configdata
+    ).then((response) => {
       // send the response in Json format
       res.json(response.data);
       console.log(response.data);
@@ -115,16 +120,24 @@ const tiktokrevoke = (req, res, next) => {
     const { access_token } = req.query;
 
     let url_revoke = "https://open.tiktokapis.com/v2/oauth/revoke/";
-    url_revoke += `?client_key=${CLIENT_KEY}`;
-    url_revoke += `&client_secret=${CLIENT_SECRET}`;
-    url_revoke += `token=${access_token}`;
 
-    axios.post(url_revoke,{
+    const body = {
+      client_key: CLIENT_KEY,
+      client_secret: CLIENT_SECRET,
+      token: access_token,
+    }
+    const configdata = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "Cache-Control": "no-cache",
-    }
-  }).then((response) => {
+      },
+    };
+
+    axios.post(
+      url_revoke,
+      body,
+      configdata
+    ).then((response) => {
       // send the response in Json format
       res.json(response.data);
       console.log(response.data);
